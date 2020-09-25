@@ -27,20 +27,40 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const newPerson = {
-      name: newName,
-      number: newNumber
+    const personToEdit = persons.find(person => person.name === newName)
+    if (personToEdit
+      ? window.confirm(`Do you want to edit ${personToEdit.name}s number?`)
+      : false) {
+      personService.update(personToEdit.id, {
+        name: personToEdit.name,
+        number: newNumber
+      }).then(editedPerson => {
+        setPersons(person => person.id !== personToEdit.id
+          ? person
+          : editedPerson)
+        setNewName('')
+        setNewNumber('')
+      })
+    } else {
+      const newPerson = {
+        name: newName,
+        number: newNumber
+      }
+      personService.create(newPerson)
+        .then(addedPerson => setPersons(persons.concat(addedPerson)))
+      setNewName('')
+      setNewNumber('')
     }
-    personService.create(newPerson)
-      .then(addedPerson => setPersons(persons.concat(addedPerson)))
-    setNewName('')
-    setNewNumber('')
   }
 
   const deletePerson = (id) => {
+    console.log(persons.map(
+      person => person.id !== id ? person : null))
     personService.remove(id)
-      .then(removedPerson => setPersons(persons.map(
-        person => person.id !== removedPerson.id ? person : null)))
+      .then(removedPerson => setPersons(persons.filter(
+        person => person.id !== id)))
+      .catch(() => setPersons(persons.filter(
+        person => person.id !== id)))
   }
 
   const alertOnSubmit = (event) => {

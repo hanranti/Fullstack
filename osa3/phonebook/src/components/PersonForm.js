@@ -3,8 +3,7 @@ import React from 'react'
 const PersonForm = ({ persons, newName, newNumber,
     handleNewNameChange, handleNewNumberChage,
     alertOnSubmit, addPerson }) => (
-        <form onSubmit={persons.filter(person => person.name === newName).length > 0
-            ? alertOnSubmit : addPerson}>
+        <form onSubmit={addPerson}>
             <div>
                 name: <input value={newName} onChange={handleNewNameChange} />
             </div>
