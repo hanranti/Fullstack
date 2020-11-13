@@ -28,19 +28,18 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     const personToEdit = persons.find(person => person.name === newName)
-    if (personToEdit
-      ? window.confirm(`Do you want to edit ${personToEdit.name}s number?`)
-      : false) {
-      personService.update(personToEdit.id, {
-        name: personToEdit.name,
-        number: newNumber
-      }).then(editedPerson => {
-        setPersons(person => person.id !== personToEdit.id
-          ? person
-          : editedPerson)
-        setNewName('')
-        setNewNumber('')
-      })
+    if (personToEdit) {
+      if (window.confirm(`Do you want to edit ${personToEdit.name}s number?`)) {
+        personService.update(personToEdit.id, {
+          name: personToEdit.name,
+          number: newNumber
+        }).then(editedPerson => {
+          console.log([...persons.filter(person => person.id !== editedPerson.id), { id: personToEdit.id, name: personToEdit.name, number: newNumber }])
+          setPersons([...persons.filter(person => person.id !== editedPerson.id), { id: personToEdit.id, name: personToEdit.name, number: newNumber }])
+          setNewName('')
+          setNewNumber('')
+        })
+      }
     } else {
       const newPerson = {
         name: newName,
