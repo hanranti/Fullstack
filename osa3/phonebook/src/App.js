@@ -47,6 +47,10 @@ const App = () => {
       }
       personService.create(newPerson)
         .then(addedPerson => setPersons(persons.concat(addedPerson)))
+        .catch(error => {
+          console.log(error.reponse.data)
+          
+        })
       setNewName('')
       setNewNumber('')
     }
