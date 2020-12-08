@@ -48,8 +48,7 @@ const App = () => {
       personService.create(newPerson)
         .then(addedPerson => setPersons(persons.concat(addedPerson)))
         .catch(error => {
-          console.log(error)
-          window.alert(`An error occured: ${error.toString()}`)
+          window.alert(error.response.data.error)
         })
       setNewName('')
       setNewNumber('')
