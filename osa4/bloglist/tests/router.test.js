@@ -17,6 +17,10 @@ describe('Test router paths', () => {
 
     const blogsUrl = '/api/blogs'
 
+    const findBlogs = async args => await Blog
+        .find(args)
+        .then(blogsInDB => { return blogsInDB })
+
     beforeEach(async () => {
         await Blog.deleteMany({})
         await Blog.insertMany(testBlogs)
@@ -41,25 +45,20 @@ describe('Test router paths', () => {
     })
 
     test('blog can be added', async () => {
-        await Blog
-            .find({})
-            .then(blogsInDB => expect(blogsInDB.length).toEqual(3))
+        let blogs = await findBlogs({})
+        expect(blogs.length).toEqual(3)
         await api
             .post(blogsUrl)
             .send(otherTestBlogs[0])
-        await Blog
-            .find({})
-            .then(blogsInDB => expect(blogsInDB.length).toEqual(4))
-        await Blog
-            .find({ "author": "Rowling" })
+        blogs = await findBlogs({})
+        expect(blogs.length).toEqual(4)
+        expect(blogs[3].title).toEqual(otherTestBlogs[0].title)
         await api
             .post(blogsUrl)
             .send(otherTestBlogs[1])
-        await Blog
-            .find({})
-            .then(blogsInDB => expect(blogsInDB.length).toEqual(5))
-        await Blog
-            .find({ "url": "blogsite" })
+        blogs = await findBlogs({})
+        expect(blogs.length).toEqual(5)
+        expect(blogs[4].author).toEqual(otherTestBlogs[1].author)
     })
 
     afterAll(() => mongoose.connection.close())
