@@ -10,7 +10,7 @@ const findAllBlogs = async () => {
     return blogs
 }
 
-const createBlog = async (body) => {
+const createBlog = async body => {
     body.likes = body.likes ? body.likes : 0
     const blog = new Blog(body)
     let createdBlog = {}
@@ -23,7 +23,14 @@ const createBlog = async (body) => {
     return createdBlog
 }
 
+const deleteBlog = async id => {
+    let deletedBlog
+    await Blog.findByIdAndRemove(id).then(blog => deletedBlog = blog)
+    return deletedBlog
+}
+
 module.exports = {
     findAllBlogs,
-    createBlog
+    createBlog,
+    deleteBlog
 }

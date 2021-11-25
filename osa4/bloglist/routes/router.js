@@ -11,4 +11,11 @@ router.post('/', async (req, res) => {
         : res.status(400).send({ message: 'bad request' })
 })
 
+router.delete('/:id', async (req, res) => {
+    const deletedBlog = await controller.deleteBlog(req.param.id)
+    deletedBlog
+        ? res.status(204).json(deletedBlog)
+        : res.status(400).send({ message: "id not found" })
+})
+
 module.exports = router

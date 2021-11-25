@@ -69,7 +69,6 @@ describe('Test router paths', () => {
             .post(blogsUrl)
             .send(otherTestBlogs[1])
         let blogs = await findBlogs({})
-        console.log(blogs[3])
         expect(blogs[3].likes).toBeDefined()
         expect(blogs[3].likes).toEqual(0)
     })
@@ -89,6 +88,13 @@ describe('Test router paths', () => {
             .expect(400)
         let blogs = await findBlogs({})
         expect(blogs.length).toEqual(3)
+    })
+
+    test('blogs can be deleted', async () => {
+        let blogs = await findBlogs({})
+        await api.delete(`${blogsUrl}/${blogs[0].id.toString()}`)
+        blogs = await findBlogs({})
+        expect(blogs.length).toEqual(2)
     })
 
     afterAll(() => mongoose.connection.close())
