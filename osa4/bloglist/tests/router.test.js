@@ -12,7 +12,10 @@ describe('Test router paths', () => {
     ]
     const otherTestBlogs = [
         { "title": "Harry Potter 3", "author": "Rowling", "url": "harrypotterbooks", "likes": 5000 },
-        { "title": "Blog", "author": "blogger", "url": "blogsite" }
+        { "title": "Blog", "author": "blogger", "url": "blogsite" },
+        { "author": "mr. X", "url": "unadded" },
+        { "title": "first blog", "author": "mrs. X" },
+        { "author": "noname" }
     ]
 
     const blogsUrl = '/api/blogs'
@@ -69,6 +72,23 @@ describe('Test router paths', () => {
         console.log(blogs[3])
         expect(blogs[3].likes).toBeDefined()
         expect(blogs[3].likes).toEqual(0)
+    })
+
+    test('blog without title or url cannot be added', async () => {
+        await api
+            .post(blogsUrl)
+            .send(otherTestBlogs[2])
+            .expect(400)
+        await api
+            .post(blogsUrl)
+            .send(otherTestBlogs[3])
+            .expect(400)
+        await api
+            .post(blogsUrl)
+            .send(otherTestBlogs[4])
+            .expect(400)
+        let blogs = await findBlogs({})
+        expect(blogs.length).toEqual(3)
     })
 
     afterAll(() => mongoose.connection.close())

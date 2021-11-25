@@ -6,7 +6,9 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    res.status(201).json(await controller.createBlog(req.body))
+    req.body.title && req.body.url
+        ? res.status(201).json(await controller.createBlog(req.body))
+        : res.status(400).send({ message: 'bad request' })
 })
 
 module.exports = router
