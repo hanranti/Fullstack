@@ -26,5 +26,15 @@ describe('Test router paths', () => {
         expect(res.body).toHaveLength(3)
     })
 
+    test('id is correcly defined', async () => {
+        const res = await api.get(blogsUrl)
+        .expect(200)
+
+        res.body.forEach(blog => {
+            expect(blog.id).toBeDefined()
+            expect(blog._id).not.toBeDefined()
+        })
+    })
+
     afterAll(() => mongoose.connection.close())
 })
