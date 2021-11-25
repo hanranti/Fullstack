@@ -12,7 +12,7 @@ describe('Test router paths', () => {
     ]
     const otherTestBlogs = [
         { "title": "Harry Potter 3", "author": "Rowling", "url": "harrypotterbooks", "likes": 5000 },
-        { "title": "Blog", "author": "blogger", "url": "blogsite", "likes": 0 }
+        { "title": "Blog", "author": "blogger", "url": "blogsite" }
     ]
 
     const blogsUrl = '/api/blogs'
@@ -59,6 +59,16 @@ describe('Test router paths', () => {
         blogs = await findBlogs({})
         expect(blogs.length).toEqual(5)
         expect(blogs[4].author).toEqual(otherTestBlogs[1].author)
+    })
+
+    test('blog default likes is 0', async () => {
+        await api
+            .post(blogsUrl)
+            .send(otherTestBlogs[1])
+        let blogs = await findBlogs({})
+        console.log(blogs[3])
+        expect(blogs[3].likes).toBeDefined()
+        expect(blogs[3].likes).toEqual(0)
     })
 
     afterAll(() => mongoose.connection.close())

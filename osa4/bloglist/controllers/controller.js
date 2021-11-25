@@ -11,6 +11,7 @@ const findAllBlogs = async () => {
 }
 
 const createBlog = async (body) => {
+    body.likes = body.likes ? body.likes : 0
     const blog = new Blog(body)
     let createdBlog = {}
 
