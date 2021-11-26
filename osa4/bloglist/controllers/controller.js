@@ -29,8 +29,15 @@ const deleteBlog = async id => {
     return deletedBlog
 }
 
+const updateBlog = async (id, blog, options) => {
+    let updatedBlog
+    await Blog.findByIdAndUpdate(id, blog, options).then(returnedBlog => updatedBlog = returnedBlog)
+    return updatedBlog
+}
+
 module.exports = {
     findAllBlogs,
     createBlog,
-    deleteBlog
+    deleteBlog,
+    updateBlog
 }

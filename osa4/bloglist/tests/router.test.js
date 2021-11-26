@@ -68,7 +68,7 @@ describe('Test router paths', () => {
         await api
             .post(blogsUrl)
             .send(otherTestBlogs[1])
-        let blogs = await findBlogs({})
+        const blogs = await findBlogs({})
         expect(blogs[3].likes).toBeDefined()
         expect(blogs[3].likes).toEqual(0)
     })
@@ -86,17 +86,36 @@ describe('Test router paths', () => {
             .post(blogsUrl)
             .send(otherTestBlogs[4])
             .expect(400)
-        let blogs = await findBlogs({})
+        const blogs = await findBlogs({})
         expect(blogs.length).toEqual(3)
     })
 
     test('blogs can be deleted', async () => {
-        let oldBlogs = await findBlogs({})
+        const oldBlogs = await findBlogs({})
         await api.delete(`${blogsUrl}/${oldBlogs[0].id.toString()}`)
-        let newBlogs = await findBlogs({})
+        const newBlogs = await findBlogs({})
         expect(newBlogs.length).toEqual(2)
         expect(newBlogs[0]).toEqual(oldBlogs[1])
         expect(newBlogs[1]).toEqual(oldBlogs[2])
+    })
+
+    test('blogs can be updated', async () => {
+        const oldBlogs = await findBlogs({})
+        await api
+            .put(`${blogsUrl}/${oldBlogs[1].id.toString()}`)
+            .send(otherTestBlogs[2])
+            .expect(200)
+        const newBlogs = await findBlogs({})
+        expect(newBlogs.length).toEqual(3)
+        expect(newBlogs[0]).toEqual(oldBlogs[0])
+        expect(newBlogs[1].toJSON()).toEqual({
+            id: oldBlogs[1].id,
+            title: oldBlogs[1].title,
+            author: otherTestBlogs[2].author,
+            url: otherTestBlogs[2].url,
+            likes: oldBlogs[1].likes
+        })
+        expect(newBlogs[2]).toEqual(oldBlogs[2])
     })
 
     afterAll(() => mongoose.connection.close())
