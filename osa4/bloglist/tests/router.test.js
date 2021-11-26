@@ -91,10 +91,12 @@ describe('Test router paths', () => {
     })
 
     test('blogs can be deleted', async () => {
-        let blogs = await findBlogs({})
-        await api.delete(`${blogsUrl}/${blogs[0].id.toString()}`)
-        blogs = await findBlogs({})
-        expect(blogs.length).toEqual(2)
+        let oldBlogs = await findBlogs({})
+        await api.delete(`${blogsUrl}/${oldBlogs[0].id.toString()}`)
+        let newBlogs = await findBlogs({})
+        expect(newBlogs.length).toEqual(2)
+        expect(newBlogs[0]).toEqual(oldBlogs[1])
+        expect(newBlogs[1]).toEqual(oldBlogs[2])
     })
 
     afterAll(() => mongoose.connection.close())
