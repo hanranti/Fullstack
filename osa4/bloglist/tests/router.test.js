@@ -22,7 +22,7 @@ describe('Test router paths', () => {
 
     const findBlogs = async args => await Blog
         .find(args)
-        .then(blogsInDB => { return blogsInDB })
+        .exec()
 
     beforeEach(async () => {
         await Blog.deleteMany({})
