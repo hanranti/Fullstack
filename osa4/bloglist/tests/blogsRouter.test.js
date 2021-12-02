@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
-describe('Test router paths', () => {
+describe('Test blog router paths', () => {
     const app = require('../app')
     const api = supertest(app)
     const Blog = require('../models/Blog')
@@ -20,9 +20,7 @@ describe('Test router paths', () => {
 
     const blogsUrl = '/api/blogs'
 
-    const findBlogs = async args => await Blog
-        .find(args)
-        .exec()
+    const findBlogs = async args => await Blog.find(args).exec()
 
     beforeEach(async () => {
         await Blog.deleteMany({})

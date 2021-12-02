@@ -11,8 +11,12 @@ mongoose.connect(mongoUrl)
 app.use(cors())
 app.use(express.json())
 
-const router = require('./routes/router')
-const apiUrl = '/api/blogs'
-app.use(apiUrl, router)
+const blogsRouter = require('./routes/blogsRouter')
+const blogsApiUrl = '/api/blogs'
+app.use(blogsApiUrl, blogsRouter)
+
+const usersRouter = require('./routes/usersRouter')
+const usersApiUrl = '/api/users'
+app.use(usersApiUrl, usersRouter)
 
 module.exports = app
