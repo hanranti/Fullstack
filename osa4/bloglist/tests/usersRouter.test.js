@@ -64,10 +64,94 @@ describe('test users router paths', () => {
 
     test('user with existing username cannot be added', async () => {
         const res = await api.post(usersUrl)
-            .send(testUsersWithoutPasswordHash[0])
+            .send({
+                name: "Bruce",
+                username: "Ash",
+                password: "abc1234567"
+            })
             .expect(400)
             .expect('Content-Type', /application\/json/)
-        expect(res.body).toEqual({ error: "username exists" })
+        expect(res.body).toEqual({ errors: ["username already in use"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user without username cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "nousernameuser",
+                password: "asdfg"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["username must be provided"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user with too short username cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "Ash",
+                username: "As",
+                password: "asdfgsdadsa"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["username must be 3 or more characters long"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user without password cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "nopassworduser",
+                username: "nopassword123"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["password must be provided"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user with too short password cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "Ash",
+                username: "AshhsA",
+                password: "BC"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["password must be 3 or more characters long"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user without username and password cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "nousernameuser"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["username must be provided", "password must be provided"] })
+        const users = await findUsers({})
+        expect(users.length).toBe(3)
+    })
+
+    test('user with too short username and password cannot be added', async () => {
+        const res = await api.post(usersUrl)
+            .send({
+                name: "Campbell",
+                username: "Br",
+                password: "Ca"
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+        expect(res.body).toEqual({ errors: ["username must be 3 or more characters long", "password must be 3 or more characters long"] })
         const users = await findUsers({})
         expect(users.length).toBe(3)
     })
