@@ -1,13 +1,10 @@
 const User = require('../models/User')
+const Blog = require('../models/Blog')
 const bcrypt = require('bcrypt')
 const { response } = require('../app')
 
 const findAllUsers = async () => {
-    const users = (await User.find({}).exec()).map(user => ({
-        name: user.name,
-        username: user.username,
-        id: user.id
-    }))
+    const users = (await User.find({}).populate('blogs').exec())
     return users
 }
 
