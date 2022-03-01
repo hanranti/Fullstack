@@ -37,7 +37,12 @@ const createUser = async body => {
     }
 }
 
+const login = () => {
+    
+}
+
 module.exports = {
     findAllUsers,
-    createUser
+    createUser,
+    login
 }

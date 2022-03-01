@@ -1,15 +1,16 @@
 const Blog = require('../models/Blog')
 const User = require('../models/User')
+const jwt = require('jsonwebtoken')
 
 const findAllBlogs = async () => {
     const blogs = (await Blog.find({}).exec())
 
     const promisedBlogs = await Promise.all(blogs.map(async blog => ({
         title: blog.title,
-        author:blog.author,
+        author: blog.author,
         url: blog.url,
         likes: blog.likes,
-        user: await User.findOne({id: blog.user}).select('-blogs')
+        user: await User.findOne({ id: blog.user }).select('-blogs')
     })))
 
     return promisedBlogs
