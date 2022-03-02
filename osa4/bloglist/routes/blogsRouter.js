@@ -1,11 +1,13 @@
 const router = require('express').Router()
 const blogsController = require('../controllers/blogsController')
+const Blog = require('../models/Blog')
 
 router.get('/', async (req, res) => {
     res.json(await blogsController.findAllBlogs())
 })
 
 router.post('/', async (req, res) => {
+    console.log(req.token)
     const user = req.user
     console.log(user)
     user
@@ -17,7 +19,7 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     const user = req.user
-    if (user) {
+    if (user && user.equals((await Blog.findById(req.params.id)).user)) {
         const deletedBlog = await blogsController.deleteBlog(req.params.id, user)
         deletedBlog
             ? res.status(204).send({ message: "deleted" })
@@ -29,7 +31,7 @@ router.delete('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const user = req.user
-    if (user) {
+    if (user && user.equals((await Blog.findById(req.params.id)).user)) {
         const updatedBlog = await blogsController.updateBlog(req.params.id, req.body, { new: true }, user)
         res.status(200).json(updatedBlog)
     } else {

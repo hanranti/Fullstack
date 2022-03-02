@@ -11,11 +11,10 @@ mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
-app.use(middleware.userExtractor)
 
 const blogsRouter = require('./routes/blogsRouter')
 const blogsApiUrl = '/api/blogs'
-app.use(blogsApiUrl, blogsRouter)
+app.use(blogsApiUrl, middleware.tokenExtractor, middleware.userExtractor, blogsRouter)
 
 const usersRouter = require('./routes/usersRouter')
 const usersApiUrl = '/api/users'

@@ -31,6 +31,11 @@ const validateToken = async req => {
     return !token || !decodedToken.id ? false : await User.findById(decodedToken.id)
 }
 
+const tokenExtractor = (req, res, next) => {
+    req.token = getTokenFrom(req)
+    next()
+}
+
 const userExtractor = async (req, res, next) => {
     req.user = await validateToken(req)
     next()
@@ -39,5 +44,6 @@ const userExtractor = async (req, res, next) => {
 module.exports = {
     unknownEndpoint,
     errorHandler,
+    tokenExtractor,
     userExtractor
 }
