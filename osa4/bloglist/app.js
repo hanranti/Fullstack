@@ -11,6 +11,7 @@ mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
+app.use(middleware.userExtractor)
 
 const blogsRouter = require('./routes/blogsRouter')
 const blogsApiUrl = '/api/blogs'
